@@ -1,16 +1,25 @@
 (ns my-transformation
   (:require [com.ohua.ir :as ir]
-            [com.ohua.lang :as ohua]))
+            [com.ohua.lang :as ohua]
+            [clojure.pprint :refer [pprint]]))
 
 
 (ohua/ohua-require [mathops])
 
-; Transformations are always a function IRData -> IRData, hence we must return the altered data in the end
-(defn no-op-transform [data]
+
+(defn no-op-transform 
+  "Transformations are simply functions which take a program and return an (altered) program.
+   In this case it returns the input data completely unchanged."
+  [data]
   (println "Transformation running!")
   data ; returns the data unchanged
   )
 
+(defn print-graph 
+  "Another no-op transformation which prints the IR graph, the most important part of the data handed to the transformation."
+  [data]
+  (pprint (:graph data))
+  data)
 
 (defn is-replace-trigger? [node]
   (= 'mathops/inc (:name node)))
