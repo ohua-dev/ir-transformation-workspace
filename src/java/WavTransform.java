@@ -11,19 +11,20 @@ public class WavTransform {
         final WavFile f = WavFile.openWavFile(new File(path));
 
         final double[][] splitFrames = new double[f.getNumChannels()][BlOCK_LEN];
-        int padded = 0;
+        int read = BlOCK_LEN;
         final WavFile writeableFile = WavFile.newWavFile(new File(outPath), f.getNumChannels(), f.getNumFrames(), f.getValidBits(), f.getSampleRate());
 
-        while (padded == 0 && f.getFramesRemaining() != 0) {
+        while (read == BlOCK_LEN && f.getFramesRemaining() != 0) {
 
-            padded = splitChannels(splitFrames, f);
+            read = splitChannels(splitFrames, f);
 
             for (int i = 0; i < splitFrames.length; i ++) {
                 applyTransform(splitFrames[i]);
             
             }
 
-            writeableFile.writeFrames(splitFrames, BlOCK_LEN - padded);
+            writeableFile.writeFrames(splitFrames, read);
+            
         }
 
         f.close();
@@ -37,7 +38,6 @@ public class WavTransform {
         Complex[] arr = fftTransfromer.transform(intermediate, TransformType.INVERSE);
 
         for (int i = 0; i < arr.length; i ++) {
-            // if (arr[i].getImaginary() != 0) throw new RuntimeException("I am imaginary");
             data[i] = arr[i].getReal();
         }
     }
@@ -68,7 +68,7 @@ public class WavTransform {
                 }
             }
 
-            return BlOCK_LEN - read;
+            return read;
         }
     }
 
