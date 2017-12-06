@@ -1,12 +1,21 @@
 # A workspace for building ohua IR transformations
 
+This repository is intended as a starting point for creating a custom compiler pass/program transformation on ohuas intermediate representation.
 
 
 ## Contents
 
+- *src/java/* 
+
+    Contains the java helper classes for the WAVE filter.
+
+- *src/java/WavTransform.java*
+
+    Is the pure java implementation for the WAVE filter. This contains the algorithm that you should disassemble and make into a ohua program.
+
 - *src/clojure/my_transformation.clj* 
 
-    Contains the implementation for the custom IR passes.
+    Contains the example implementation for the custom IR passes.
 
 - *src/java/mathops/* 
 

@@ -6,11 +6,14 @@
 
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [ohua/ohua "0.7.1"]
-                 [rhizome "0.2.5"]]
+                 [rhizome "0.2.5"]
+                 [org.apache.commons/commons-math3 "3.6.1"]]
 
   :source-paths ["src/clojure"]
   :test-source-paths ["test"]
   :java-source-paths ["src/java"]
+
+  :main wav-transform
 
   :javac-options ["-target" "1.8" "-source" "1.8" "-Xlint:-options" "-g"]
 
