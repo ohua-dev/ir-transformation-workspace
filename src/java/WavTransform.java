@@ -24,7 +24,7 @@ public class WavTransform {
             }
 
             writeableFile.writeFrames(splitFrames, read);
-            
+
         }
 
         f.close();
@@ -58,18 +58,14 @@ public class WavTransform {
 
         
         int read = source.readFrames(buffer, BlOCK_LEN);
-        if (read == BlOCK_LEN)
-            return 0;
-        else {
-            
-            for (int i = read - 1; i < BlOCK_LEN; i++) {
-                for (int x = 0; x < chans; x++) {
-                    buffer[x][i] = 0;
-                }
+        
+        for (int i = read - 1; i < BlOCK_LEN; i++) {
+            for (int x = 0; x < chans; x++) {
+                buffer[x][i] = 0;
             }
-
-            return read;
         }
+
+        return read;
     }
 
     // private static double[] mergeChannels(double[][] data, int frames, int channels) {
