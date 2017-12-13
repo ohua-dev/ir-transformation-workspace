@@ -1,6 +1,9 @@
+import com.ohua.lang.Tuple;
 import org.apache.commons.math3.transform.*;
 import org.apache.commons.math3.complex.*;
 import java.io.*;
+import java.util.LinkedList;
+import java.util.List;
 
 public class WavTransform {
     static final int WINDOW_SIZE = 4;
@@ -29,7 +32,35 @@ public class WavTransform {
 
         f.close();
         writeableFile.close();
+    }
 
+//    public static List<Tuple<double[][], Integer>> loadFrames(WavFile f) throws IOException, WavFileException {
+     public static List<Object[]> loadFrames(WavFile f) throws IOException, WavFileException {
+      double[][] splitFrames = null;
+      int read = BlOCK_LEN;
+
+      List<Object[]> r = new LinkedList<>();
+      System.out.println("Num channels: " + f.getNumChannels());
+      while (read == BlOCK_LEN && f.getFramesRemaining() != 0) {
+        splitFrames = new double[f.getNumChannels()][BlOCK_LEN];
+        read = splitChannels(splitFrames, f);
+        r.add(new Object[] {splitFrames, read});
+      }
+      return r;
+    }
+
+    public static void writeFrames(List<Tuple<double[][], Integer>> resultFrames, WavFile outFile) throws IOException, WavFileException {
+      for(Tuple<double[][], Integer> block : resultFrames){
+        outFile.writeFrames(block.first(), block.second());
+      }
+    }
+
+    public static WavFile openWavFile(String path) throws IOException, WavFileException {
+      return WavFile.openWavFile(new File(path));
+    }
+
+    public static WavFile createTargetFile(WavFile f, String outPath) throws IOException, WavFileException {
+      return WavFile.newWavFile(new File(outPath), f.getNumChannels(), f.getNumFrames(), f.getValidBits(), f.getSampleRate());
     }
 
     private static void applyTransform(double[] data) {

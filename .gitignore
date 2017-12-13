@@ -1,3 +1,6 @@
 target/
 .lein-*
 oxp-transformed.wav
+.idea/
+*.iml
+*.dot
