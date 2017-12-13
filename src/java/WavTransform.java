@@ -40,7 +40,7 @@ public class WavTransform {
       int read = BlOCK_LEN;
 
       List<Object[]> r = new LinkedList<>();
-      System.out.println("Num channels: " + f.getNumChannels());
+//      System.out.println("Num channels: " + f.getNumChannels());
       while (read == BlOCK_LEN && f.getFramesRemaining() != 0) {
         splitFrames = new double[f.getNumChannels()][BlOCK_LEN];
         read = splitChannels(splitFrames, f);

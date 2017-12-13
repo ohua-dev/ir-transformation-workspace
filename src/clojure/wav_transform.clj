@@ -1,7 +1,9 @@
 (ns wav-transform
   (:require [com.ohua.lang :refer :all]
             [com.ohua.compile :refer [enable-ir-graphs]])
-  (:import WavTransform))
+  (:import WavTransform
+           (com.ohua.engine RuntimeProcessConfiguration RuntimeProcessConfiguration$Parallelism)
+           (java.util Properties)))
 
 ;;;
 ;;; Just like in any other program, we have to declare which stateful
@@ -17,6 +19,17 @@
 ;;; allow you to see the final dataflow graph using graphviz.
 ;;;
 ;(enable-ir-graphs)
+
+
+;;;
+;;; Runtime configuration that enables a parallel execution.
+;;;
+(defn parallel-config []
+  (doto (RuntimeProcessConfiguration.)
+    (.setProperties (doto (new Properties)
+                      (.setProperty "core-thread-pool-size" "5")
+                      (.setProperty "execution-mode" (.name (RuntimeProcessConfiguration$Parallelism/MULTI_THREADED)))
+                      ))))
 
 (defn ohua-based-wav-transform [inFilePath outFilePath]
   (let [inputFile (WavTransform/openWavFile inFilePath)
@@ -40,6 +53,9 @@
                                      result2 (ifft (filter (fft channel2)))]
                                  (mergeChannels result1 result2 read)))
                          frames)
+
+                       ; enable concurrent/parallel execution (default is single-threaded)
+                       :run-with-config (parallel-config)
                        )]
     (WavTransform/writeFrames resultBlocks outputFile)
     (.close inputFile)
